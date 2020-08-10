@@ -43,7 +43,78 @@ const _ = {
   has: function(object, key) {
     let hasValue = (object[key] !== undefined);
     return hasValue;
+  },
+
+  invert: function(object) {
+    let invertedObject = {};
+    for (let key in object) {
+      let originalValue = object[key];
+      invertedObject[originalValue]=key;
+    }
+    return invertedObject;
+  },
+
+  findKey: function(object, predicate) {
+    
+    for (let key in object) {
+      let value = object[key];
+      let predicateReturnValue = predicate(value);
+      if (predicateReturnValue) {
+        return key;
+      }
+    }
+    return undefined;
+  },
+
+  drop: function(array, n) {
+    if (n === undefined) {
+      n = 1;
+    }
+    //console.log('array:' + array);
+    //console.log('n: ' + n);
+    if (n >= array.length) {
+      return [];
+    } else {
+      let droppedArray = array.slice(n);
+      //console.log(droppedArray);
+      return droppedArray;
+    }
+  },
+
+  dropWhile: function(array, predicate) {
+    //console.log('array: ' + array);
+    let dropNumber = array.findIndex(function(element, index) {
+      return !predicate(element, index, array);
+    });
+    let droppedArray = this.drop(array, dropNumber);
+    return droppedArray;
+    //console.log('new array:' + droppedArray);
+  },
+
+  chunk: function(array, size) {
+    if (size === undefined) {
+      size = 1;
+    }
+    let numFullChunks = Math.floor(array.length/size);
+    console.log('original array: '+ array);
+    console.log('array length:'+ array.length);
+    console.log('chunk length: ' + numFullChunks);
+
+    let newArray = [];
+    for (let i = 0; i < numFullChunks; i++) {
+      let addChunk = array.slice(i*size, i*size+size);
+      newArray.push(addChunk);
+      console.log(newArray); 
+    }
+    let remainingBitLength = array.length-(numFullChunks * size);
+    console.log('remaining bit: ' + remainingBitLength);
+
+    if (remainingBitLength) {
+      newArray.push(array.slice(-1*remainingBitLength));
+    }
+    return newArray;
   }
+ 
 
 }
 
